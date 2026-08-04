@@ -1,0 +1,30 @@
+{
+  "name": "todo-list-api",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Hicham-Hal/Todo-List-API#readme",
+  "bugs": {
+    "url": "https://github.com/Hicham-Hal/Todo-List-API/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hicham-Hal/Todo-List-API.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.6.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.9.1",
+    "nodemon": "^3.1.14"
+  }
+}
