@@ -45,6 +45,7 @@ export const getTodos = async(req, res) => {
     try{
         const userId = req.user.id
         const data = res.paginatedResults
+
         return res.status(200).json(data)
     }catch(err){
         console.log(err)
@@ -68,9 +69,9 @@ export const getSingleTodo = async(req, res) => {
 export const deleteTodo = async(req, res) => {
     const { id } = req.params
     try{
-        const todo = await Todo.findOneAndDelete({ _id: id })
+        const todo = await Todo.findOneAndDelete({ _id: id, user: req.user.id })
         if(!todo) return res.status(400).json({ msg: 'todo not found' })
-        return res.status(204).json({ msg: 'successfully deletd' })
+        return res.status(204).send()
     }catch(err){
         console.log(err)
         return res.status(500).json({ error: 'Something went wrong' })
