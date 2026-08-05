@@ -66,9 +66,11 @@ export const getSingleTodo = async(req, res) => {
 export const deleteTodo = async(req, res) => {
     const { id } = req.params
     try{
-        const todo = await Todo.findOneAndDelete({ _id: id })
+        const todo = await Todo.findById(id)
         if(!todo) return res.status(404).json({ msg: 'todo not found' })
         if(todo.user.toString() !== req.user.id) return res.status(403).json({ message: 'Forbidden' })
+        
+        await todo.deleteOne()    
         return res.status(204).send()
     }catch(err){
         console.log(err)
