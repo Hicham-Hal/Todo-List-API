@@ -8,12 +8,10 @@ configDotenv()
 export const register = async(req, res) => {
     const { name, email, password } = req.body;
     const saltRounds = 12
-    if(!name || !email || !password){
-        return res.json(400).json({ msg: 'empty fields' })
-    }
+
     try{
         const user = await User.findOne({ email })
-        if(user) return res.status(400).json({ msg: 'User already exist with that email' })
+        if(user) return res.status(200).json({ msg: 'User already exist with that email' })
         
         const salt = await bcrypt.genSaltSync(saltRounds)
         const genPwd = await bcrypt.hashSync(password, salt)
@@ -34,9 +32,7 @@ export const register = async(req, res) => {
 
 export const login = async(req, res) => {
     const {email, password} = req.body
-    if(!email || !password){
-        return res.status(400).json({ error: 'Empty fields' })
-    }
+
     try{
         const user = await User.findOne({ email })
         if(!user) return res.status(404).json({ msg: 'No user with that email' })

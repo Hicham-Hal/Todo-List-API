@@ -3,9 +3,7 @@ import Todo from "../models/Todo.model.js"
 
 export const addTodo = async(req, res) => {
     const { title, description } = req.body
-    if(!title || !description){
-        return res.status(400).json({ error: 'Empty fields' })
-    }
+
     try{
         const userId = req.user.id
         const todo = new Todo({
@@ -25,9 +23,7 @@ export const addTodo = async(req, res) => {
 export const updateTodo = async(req, res) => {
     const {id} = req.params
     const {title, description} = req.body
-    if(!title || !description){
-        return res.status(400).json({ error: 'Empty fields' })
-    }
+
     try{
         const todo = await Todo.findOne({ _id: id, user: req.user.id })
         if(!todo) return res.status(404).json({ msg: 'Todo not found' })
