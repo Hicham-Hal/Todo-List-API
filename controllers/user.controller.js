@@ -25,7 +25,7 @@ export const updateTodo = async(req, res) => {
     const {title, description} = req.body
 
     try{
-        const todo = await Todo.findOne({ _id: id, user: req.user.id })
+        const todo = await Todo.findOne({ _id: id })
         if(!todo) return res.status(404).json({ msg: 'Todo not found' })
         if(todo.user.toString() !== req.user.id) return res.status(403).json({ message: 'Forbidden' })
         todo.title = title;
@@ -54,8 +54,9 @@ export const getSingleTodo = async(req, res) => {
     const {id} = req.params
     const userId = req.user.id
     try{
-        const todo = await Todo.findOne({ _id: id, user: userId })
-        if(!todo) return res.status(400).json({ error: 'todo not found' })
+        const todo = await Todo.findOne({ _id: id })
+        if(!todo) return res.status(404).json({ error: 'todo not found' })
+        if(todo.user.toString() !== req.user.id) return res.status(403).json({ message: 'Forbidden' })
         return res.status(200).json(todo)
     }catch(err){
         console.log(err)
@@ -66,9 +67,9 @@ export const getSingleTodo = async(req, res) => {
 export const deleteTodo = async(req, res) => {
     const { id } = req.params
     try{
-        const todo = await Todo.findOneAndDelete({ _id: id, user: req.user.id })
-        if(!todo) return res.status(400).json({ msg: 'todo not found' })
-        if(todo.user.toString !== req.user.id) return res.status(403).json({ message: 'Forbidden' })
+        const todo = await Todo.findOneAndDelete({ _id: id })
+        if(!todo) return res.status(404).json({ msg: 'todo not found' })
+        if(todo.user.toString() !== req.user.id) return res.status(403).json({ message: 'Forbidden' })
         return res.status(204).send()
     }catch(err){
         console.log(err)
