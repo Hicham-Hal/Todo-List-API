@@ -27,6 +27,7 @@ export const updateTodo = async(req, res) => {
     try{
         const todo = await Todo.findOne({ _id: id, user: req.user.id })
         if(!todo) return res.status(404).json({ msg: 'Todo not found' })
+        if(todo.user.toString() !== req.user.id) return res.status(403).json({ message: 'Forbidden' })
         todo.title = title;
         todo.description = description
         await todo.save()
@@ -67,6 +68,7 @@ export const deleteTodo = async(req, res) => {
     try{
         const todo = await Todo.findOneAndDelete({ _id: id, user: req.user.id })
         if(!todo) return res.status(400).json({ msg: 'todo not found' })
+        if(todo.user.toString !== req.user.id) return res.status(403).json({ message: 'Forbidden' })
         return res.status(204).send()
     }catch(err){
         console.log(err)
