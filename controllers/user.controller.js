@@ -52,7 +52,6 @@ export const getTodos = async(req, res) => {
 
 export const getSingleTodo = async(req, res) => {
     const {id} = req.params
-    const userId = req.user.id
     try{
         const todo = await Todo.findOne({ _id: id })
         if(!todo) return res.status(404).json({ error: 'todo not found' })
