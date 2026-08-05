@@ -1,3 +1,4 @@
+import { paginatedResults } from "../lib/pagination.js"
 import Todo from "../models/Todo.model.js"
 
 export const addTodo = async(req, res) => {
@@ -43,9 +44,8 @@ export const updateTodo = async(req, res) => {
 export const getTodos = async(req, res) => {
     try{
         const userId = req.user.id
-        const todos = await Todo.find({ user: userId })
-        if(!todos) return res.status(400).json({ msg: 'Todos not found' })
-        return res.status(200).json(todos)
+        const data = res.paginatedResults
+        return res.status(200).json(data)
     }catch(err){
         console.log(err)
         return res.status(500).json({ error: 'Something went wrong' })
