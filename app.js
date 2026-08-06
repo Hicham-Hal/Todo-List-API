@@ -12,8 +12,9 @@ const PORT = process.env.PORT || 3000;
 
 const app = express()
 
-
-app.use(limiter)
+if(process.env.NODE_ENV !== 'test'){
+    app.use(limiter)
+}
 app.use(cookieParser())
 app.use(express.json())
 app.use('/', authRoutes)

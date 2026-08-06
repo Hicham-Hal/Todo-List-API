@@ -54,6 +54,55 @@ describe('POST /todos', () => {
     })
 })
 
+describe('GET /todos', () => {
+    it('only returns todos belonging to the requester', async() =>{
+        const userA = await createAuthedUser()
+        const userB = await createAuthedUser()
+
+        await request(app).post('/todos').set('Authorization', `Bearer ${userA.token}`).send({
+            title: 'hello userA',
+            description: 'this is the description from userA'
+        })
+
+        await request(app).post('/todos').set('Authorization', `Bearer ${userB.token}`).send({
+            title: 'hello userB',
+            description: 'this is the description from userB'
+        })
+
+        const res = await request(app).get('/todos').set('Authorization', `Bearer ${userB.token}`)
+
+        expect(res.status).toBe(200)
+        expect(res.body.data).toHaveLength(1)
+        expect(res.body.data[0].title).toBe('hello userB')
+
+    } )
+})
+
+describe('GET /todos/:id', () => {
+    it('returns 404 for a non-existent id', async() => {
+        const {token} = await createAuthedUser()
+        const fakeId = '507f1f77bcf86cd799439011'
+
+        const res = await request(app).get(`/todos/${fakeId}`).set('Authorization', `Bearer ${token}`)
+
+        expect(res.status).toBe(404)
+    })
+
+    it('returns 403 when requesting another user\'s todo', async() => {
+        const userA = await createAuthedUser()
+        const userB = await createAuthedUser()
+
+        const created = await request(app).post('/todos').set('Authorization', `Bearer ${userA.token}`).send({
+            title: 'hello there',
+            description: 'this is the description'
+        })
+
+        const res = await request(app).get(`/todos/${created.body._id}`).set('Authorization', `Bearer ${userB.token}`)
+
+        expect(res.status).toBe(403)
+    })
+})
+
 describe('PUT /todos/:id', () => {
     it('returns 403 and does not modify another user\'s todo', async () => {
         const userA = await createAuthedUser()
@@ -106,5 +155,14 @@ describe('DELETE /todos/:id', () => {
         const checkRes = await request(app).get(`/todos/${created.body._id}`).set('Authorization', `Bearer ${userA.token}`)
 
         expect(checkRes.status).toBe(200)
+    })
+
+    it('returns 404 for a non-existent id', async() => {
+        const {token} = await createAuthedUser()
+        const fakeId = '507f1f77bcf86cd799439011'
+
+        const res = await request(app).delete(`/todos/${fakeId}`).set('Authorization', `Bearer ${token}`)
+
+        expect(res.status).toBe(404)
     })
 })
