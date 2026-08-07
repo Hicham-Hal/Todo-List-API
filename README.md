@@ -219,9 +219,34 @@ Same `404` / `403` ownership rules as above. Returns `204` with no body on succe
 └── index.js
 ```
 
-## Roadmap / Not Yet Implemented
+## Testing
 
-- Unit tests
+The project includes an automated test suite using **Vitest**, **Supertest**, and **mongodb-memory-server** (an in-memory MongoDB instance, so tests never touch your real database).
+
+**Run all tests:**
+```bash
+npm test
+```
+
+**Watch mode (re-runs on file changes):**
+```bash
+npm run test:watch
+```
+
+**Run a single file:**
+```bash
+npm test tests/integration/auth.test.js
+```
+
+### Coverage
+
+- `tests/integration/auth.test.js` — register (success, validation, duplicate email), login (success, wrong password, unknown email)
+- `tests/integration/todo.test.js` — todo CRUD, ownership enforcement (403 on another user's todo), auth requirement
+- `tests/lib/pagination.test.js` — pagination and filtering logic
+
+### Notes
+
+- The rate limiter is disabled when `NODE_ENV=test` (see `app.js`), since the test suite makes many requests in quick succession.
 
 ## License
 
