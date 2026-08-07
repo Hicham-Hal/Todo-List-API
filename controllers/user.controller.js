@@ -40,9 +40,8 @@ export const updateTodo = async(req, res) => {
 
 export const getTodos = async(req, res) => {
     try{
-        const userId = req.user.id
         const data = res.paginatedResults
-
+        console.log(data)
         return res.status(200).json(data)
     }catch(err){
         console.log(err)
